@@ -239,7 +239,7 @@
         </property>
        </column>
       </widget>
-      <widget class="QPushButton" name="pvNoteAjout">
+      <widget class="QPushButton" name="pbNoteAjout">
        <property name="geometry">
         <rect>
          <x>680</x>

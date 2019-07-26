@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'pp_Design_v1.ui',
 # licensing of 'pp_Design_v1.ui' applies.
 #
-# Created: Thu Jul 25 17:21:27 2019
+# Created: Fri Jul 26 15:57:14 2019
 #      by: pyside2-uic  running on PySide2 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -107,9 +107,9 @@ class Ui_Form(object):
         self.twSaisieNote.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
         self.twSaisieNote.setHorizontalHeaderItem(1, item)
-        self.pvNoteAjout = QtWidgets.QPushButton(self.tab)
-        self.pvNoteAjout.setGeometry(QtCore.QRect(680, 650, 75, 23))
-        self.pvNoteAjout.setObjectName("pvNoteAjout")
+        self.pbNoteAjout = QtWidgets.QPushButton(self.tab)
+        self.pbNoteAjout.setGeometry(QtCore.QRect(680, 650, 75, 23))
+        self.pbNoteAjout.setObjectName("pbNoteAjout")
         self.verticalLayoutWidget_3 = QtWidgets.QWidget(self.tab)
         self.verticalLayoutWidget_3.setGeometry(QtCore.QRect(19, 50, 251, 291))
         self.verticalLayoutWidget_3.setObjectName("verticalLayoutWidget_3")
@@ -197,7 +197,7 @@ class Ui_Form(object):
         self.pb.setText(QtWidgets.QApplication.translate("Form", "Ajout  / Modification", None, -1))
         self.twSaisieNote.horizontalHeaderItem(0).setText(QtWidgets.QApplication.translate("Form", "Elève", None, -1))
         self.twSaisieNote.horizontalHeaderItem(1).setText(QtWidgets.QApplication.translate("Form", "Notes", None, -1))
-        self.pvNoteAjout.setText(QtWidgets.QApplication.translate("Form", "Valider", None, -1))
+        self.pbNoteAjout.setText(QtWidgets.QApplication.translate("Form", "Valider", None, -1))
         self.label_7.setText(QtWidgets.QApplication.translate("Form", "Matière", None, -1))
         self.pbMatiereAjout.setText(QtWidgets.QApplication.translate("Form", "Ajout", None, -1))
         self.label_8.setText(QtWidgets.QApplication.translate("Form", "Nom du devoir", None, -1))
