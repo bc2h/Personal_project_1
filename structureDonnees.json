@@ -1,78 +1,82 @@
 {
-  "academies":
-  [
+  "academies": [
     {
-      "nom": "nomAcademie",
-      "etablissements":
-      [
+      "etablissements": [
         {
-          "nom" :"nomEtablissement",
-          "adresse":"adresseEtablissement",
-          "classes":
-          [
+          "adresse": "adresseEtablissement",
+          "classes": [
             {
-              "nom":"nomClasse",
-              "anneeSco":"anneeClasse",
-              "PP":"ppClasse",
-              "eleves":
-              [
+              "PP": "ppClasse",
+              "anneeSco": "anneeClasse",
+              "eleves": [
                 {
-                  "nom":"nomEleve",
-                  "prenom":"prenomEleve",
-                  "adresse":"adresseEleve",
-                  "appreciationPP":"appreciationEleve",
-                  "matieres":
-                  [
+                  "adresse": "adresseEleve",
+                  "appreciationPP": "appreciationEleve",
+                  "matieres": [
                     {
-                      "nom":"nomMatiere",
-                      "coef":1.0,
-                      "appreciation":"appreciationMatiere",
-                      "notes":
-                      [
+                      "appreciation": "appreciationMatiere",
+                      "coef": 1.0,
+                      "nom": "nomMatiere",
+                      "notes": [
                         {
-                          "nom":"nomNote1",
                           "coef": 1.0,
-                          "valeur":1.0
+                          "nom": "nomNote1",
+                          "valeur": 1.0
                         },
-						{
-                          "nom":"nomNote2",
+                        {
                           "coef": 1.0,
-                          "valeur":2.0
+                          "nom": "nomNote2",
+                          "valeur": 2.0
+                        },
+                        {
+                          "coefficient": 3.0,
+                          "nom": "DM1",
+                          "valeur": 10.0
                         }
                       ]
                     }
-                  ]
+                  ],
+                  "nom": "nomEleve",
+                  "prenom": "prenomEleve"
                 },
                 {
-                  "nom": "nomEleve2",
-                  "prenom": "prenomEleve2",
                   "adresse": "adresseEleve2",
                   "appreciationPP": "appreciationEleve2",
                   "matieres": [
                     {
-                      "nom": "nomMatiere",
-                      "coef": 1.0,
                       "appreciation": "appreciationMatiere",
+                      "coef": 1.0,
+                      "nom": "nomMatiere",
                       "notes": [
                         {
-                          "nom": "nomNote1.2",
                           "coef": 1.2,
+                          "nom": "nomNote1.2",
                           "valeur": 1.2
                         },
                         {
-                          "nom": "nomNote2.2",
                           "coef": 1.2,
+                          "nom": "nomNote2.2",
                           "valeur": 2.2
+                        },
+                        {
+                          "coefficient": 3.0,
+                          "nom": "DM1",
+                          "valeur": 20.0
                         }
                       ]
                     }
-                  ]
+                  ],
+                  "nom": "nomEleve2",
+                  "prenom": "prenomEleve2"
                 }
-              ]
+              ],
+              "nom": "nomClasse"
             }
-          ]
+          ],
+          "nom": "nomEtablissement"
         }
-      ]
+      ],
+      "nom": "nomAcademie"
     }
   ]
 }

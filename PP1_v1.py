@@ -15,12 +15,18 @@ from ui_pp_design_v1 import Ui_Form
 import numpy as np
 
 # charger le JSON dans un dico
-dicoJson= json.load(open("structureDonnees.json"))
+# dicoJson= json.load(open("structureDonnees.json"))
+filename= "structureDonnees.json"
+
 
 class EditeurNote(QWidget):
     def __init__(self):
         super(EditeurNote, self).__init__()
-        global dicoJson
+
+        global filename
+        self.dicoJson = {}
+        self.dicoJson = self.lireJSON(filename)
+
         self.ui = Ui_Form()
         self.ui.setupUi(self)  # permet de charger tous les composants graphiques coder dans un autre fichier
         # partir du fichier .py (au lieu du .ui) permet d'accéder à la complétion cad la liste des fonctions, widgets...
@@ -33,7 +39,6 @@ class EditeurNote(QWidget):
         self.ui.cbClasseSelect.currentIndexChanged.connect(self.majMatiere)
         self.ui.cbMatiereSelect.currentIndexChanged.connect(self.affichageEleves)
         self.ui.pbNoteAjout.clicked.connect(self.ajoutNote)
-        # self.ui.leDevoirEdit.
 
 
         self.majAcademies()
@@ -41,21 +46,21 @@ class EditeurNote(QWidget):
     # faire une liste des académies et en ajouter une
     def majAcademies(self):
         self.ui.cbAcademieSelect.clear()
-        listAcademies = [ac["nom"] for ac in dicoJson["academies"]]
+        listAcademies = [ac["nom"] for ac in self.dicoJson["academies"]]
         self.ui.cbAcademieSelect.addItems(listAcademies)
         # print(listAcademies)
 
     # faire une liste des etablissements et en ajouter un
     def majEtablissements(self):
         self.ui.cbEtablissementSelect.clear()
-        listEtablissements=[et["nom"] for et in dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()]["etablissements"]]
+        listEtablissements=[et["nom"] for et in self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()]["etablissements"]]
         self.ui.cbEtablissementSelect.addItems(listEtablissements)
         # print(listEtablissements)
 
     # faire une liste des classes et en ajouter une
     def majClasses(self):
         self.ui.cbClasseSelect.clear()
-        listClasses=[cl["nom"] for cl in dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
+        listClasses=[cl["nom"] for cl in self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
                     ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()]["classes"]]
         self.ui.cbClasseSelect.addItems(listClasses)
         # print(listClasses)
@@ -63,7 +68,7 @@ class EditeurNote(QWidget):
     # recup liste eleves puis liste des matières de tous les eleves sans doublons (np.unique)
     def majMatiere(self):
         self.ui.cbMatiereSelect.clear()
-        dicoEleves = dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
+        dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
                             ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
                             ["classes"][self.ui.cbClasseSelect.currentIndex()] \
                             ["eleves"]
@@ -80,7 +85,7 @@ class EditeurNote(QWidget):
         cpt= 0
         self.ui.twSaisieNote.clearContents()
         # self.ui.twSaisieNote.selectColumnCount(2)     # pour avoir '2' colonnes
-        dicoEleves = dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
+        dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
                             ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
                             ["classes"][self.ui.cbClasseSelect.currentIndex()] \
                             ["eleves"]
@@ -98,7 +103,7 @@ class EditeurNote(QWidget):
                     cpt = cpt+1
 
     def ajoutNote(self):
-        dicoEleves = dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
+        dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
             ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
             ["classes"][self.ui.cbClasseSelect.currentIndex()] \
             ["eleves"]
@@ -115,16 +120,23 @@ class EditeurNote(QWidget):
                 if eleves["nom"] == eleveTw:
                     for matiere in eleves["matieres"]:
                         if matiere["nom"] == mat :
-                            print(eleves["nom"], matiere["nom"], 'devoir:', nomDevoir, 'coeff:', coeff, 'note:', note)
+                            # print(eleves["nom"], matiere["nom"], 'devoir:', nomDevoir, 'coeff:', coeff, 'note:', note)
                             ajoutNotes = matiere["notes"]
                             ajoutNotes.append({"nom": nomDevoir, "coefficient": coeff, "valeur": note})
                             print(ajoutNotes)
+                            self.sauveJSON(filename)
 
-    # def sauveJSON(self, fileName):
-    #     jsonClasse = json.dumps(self.monRepertoire, sort_keys=True, indent=4)
-    #     f = open(fileName, 'w')
-    #     f.write(jsonClasse)
-    #     f.close()
+    def lireJSON(self,fileName):
+        with open(fileName) as json_file:
+            dico = json.load(json_file)
+            return dico
+        return None
+
+    def sauveJSON(self, fileName):
+        jsonClasse = json.dumps(self.dicoJson, sort_keys=True, indent=2)
+        f = open(fileName, 'w')
+        f.write(jsonClasse)
+        f.close()
 
 
 
