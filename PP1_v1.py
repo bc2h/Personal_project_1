@@ -32,6 +32,7 @@ class EditeurNote(QWidget):
         self.ui.cbEtablissementSelect.currentIndexChanged.connect(self.majClasses)
         self.ui.cbClasseSelect.currentIndexChanged.connect(self.majMatiere)
         self.ui.cbMatiereSelect.currentIndexChanged.connect(self.affichageEleves)
+        self.ui.pbNoteAjout.clicked.connect(self.ajoutNote)
         # self.ui.leDevoirEdit.
 
 
@@ -73,11 +74,11 @@ class EditeurNote(QWidget):
                 listMatieres.append(ma["nom"])
         listMatieresUniques = np.unique(listMatieres)
         self.ui.cbMatiereSelect.addItems(listMatieresUniques)
-        print(listMatieresUniques)
+        # print(listMatieresUniques)
 
     def affichageEleves(self):
         cpt= 0
-        self.ui.twSaisieNote.clear()
+        self.ui.twSaisieNote.clearContents()
         # self.ui.twSaisieNote.selectColumnCount(2)     # pour avoir '2' colonnes
         dicoEleves = dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
                             ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
@@ -95,6 +96,41 @@ class EditeurNote(QWidget):
                     spinB.setProperty("nom", nomE)
                     self.ui.twSaisieNote.setCellWidget(cpt, 1, spinB)
                     cpt = cpt+1
+
+    def ajoutNote(self):
+        dicoEleves = dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
+            ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
+            ["classes"][self.ui.cbClasseSelect.currentIndex()] \
+            ["eleves"]
+
+        n = self.ui.twSaisieNote.rowCount()
+        for i in range(0, n):
+            mat = self.ui.cbMatiereSelect.currentText()
+            eleveTw = self.ui.twSaisieNote.item(i, 0).text()
+            spinB = self.ui.twSaisieNote.cellWidget(i,1)
+            note = spinB.value()
+            nomDevoir = self.ui.leDevoirEdit.text()
+            coeff = self.ui.dsbCoeffDevoir.value()
+            for eleves in dicoEleves:
+                if eleves["nom"] == eleveTw:
+                    for matiere in eleves["matieres"]:
+                        if matiere["nom"] == mat :
+                            print(eleves["nom"], matiere["nom"], 'devoir:', nomDevoir, 'coeff:', coeff, 'note:', note)
+                            ajoutNotes = matiere["notes"]
+                            ajoutNotes.append({"nom": nomDevoir, "coefficient": coeff, "valeur": note})
+                            print(ajoutNotes)
+
+    # def sauveJSON(self, fileName):
+    #     jsonClasse = json.dumps(self.monRepertoire, sort_keys=True, indent=4)
+    #     f = open(fileName, 'w')
+    #     f.write(jsonClasse)
+    #     f.close()
+
+
+
+    # def ajoutNotes(nom, coefficient, valeur):
+    #     dicoJson["academies"][0]["etablissements"][0]["classes"]["eleves"][0]["matieres"][0]["notes"].append('{\
+    #     "nom": nom, "coefficient": coeff, "valeur": valeur}')
     #
     # def ajoutAcademie(nom, adresse, classes):
     #     dicoJson["academies"][0]["etablissements"].append('{"nom": nom, "adresse":adresse, "classes": []}')
@@ -102,8 +138,21 @@ class EditeurNote(QWidget):
     # def ajoutEtablissement(nom, adresse, classes):
     #     dicoJson["academies"][0]["etablissements"].append('{"nom": nom, "adresse":adresse, "classes": []}')
     #
-    #  def ajoutClasse(nom, pp, anneesco, eleve):
-    #      dicoJson["academies"][0]["etablissements"][0]["classes"].append('{"nom": nom, "PP": pp, "anneeSco": anneesco, "eleves": []}')
+    # def ajoutClasse(nom, pp, anneesco, eleve):
+    #     dicoJson["academies"][0]["etablissements"][0]["classes"].append('{"nom": nom, "PP": pp, "anneeSco": anneesco, \
+    #               "eleves": []}')
+    #
+    # def ajoutEleve(nom, prenom, adresse, appreciationPP, matieres):
+    #     dicoJson["academies"][0]["etablissements"][0]["classes"][0]["eleves"].append('{"nom": nom, "prenom": prenom, \
+    #               "adresse": adresse, "appreciationPP": appreciation, "matieres": []}')
+    #
+    # def ajoutMatière(nom, appreciation, coefficient, notes):
+    #     dicoJson["academies"][0]["etablissements"][0]["classes"][0]["eleves"][0]["matieres"].append('{"nom": nom, \
+    #     "appreciation": appreciation, "cefficient": coeff, "appreciationPP": appreciation, "matieres": []}')
+    #
+    # def ajoutNotes(nom, coefficient, valeur):
+    #     dicoJson["academies"][0]["etablissements"][0]["classes"][0]["eleves"][0]["matieres"][0]["notes"].append('{\
+    #     "nom": nom, "coefficient": coeff, "valeur": valeur}')
 
 
 
