@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1234</width>
-    <height>842</height>
+    <width>1192</width>
+    <height>836</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -213,7 +213,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -384,19 +384,6 @@
         </property>
        </column>
       </widget>
-      <widget class="QLabel" name="wGraph">
-       <property name="geometry">
-        <rect>
-         <x>670</x>
-         <y>80</y>
-         <width>391</width>
-         <height>401</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Diagramme radar</string>
-       </property>
-      </widget>
       <widget class="QPushButton" name="pbImpressionPdf">
        <property name="geometry">
         <rect>
@@ -421,6 +408,16 @@
        </property>
        <property name="text">
         <string>Exporter les notes en csv</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="wGraph" native="true">
+       <property name="geometry">
+        <rect>
+         <x>620</x>
+         <y>60</y>
+         <width>531</width>
+         <height>481</height>
+        </rect>
        </property>
       </widget>
      </widget>

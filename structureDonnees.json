@@ -16,21 +16,42 @@
                     {
                       "appreciation": "appreciationMatiere",
                       "coef": 1.0,
-                      "nom": "nomMatiere",
+                      "nom": "matiere3",
+                      "notes": [
+                        {"coef": 1.0,
+                          "nom": "nomNoteM3",
+                          "valeur": 14.0}]},
+                    {
+                      "appreciation": "appreciationMatiere",
+                      "coef": 1.0,
+                      "nom": "matiere2",
+                      "notes": [
+                        {"coef": 1.0,
+                          "nom": "nomNoteM2",
+                          "valeur": 12.0}]},
+                    {
+                      "appreciation": "appreciationMatiere",
+                      "coef": 1.0,
+                      "nom": "matiere1",
                       "notes": [
                         {
                           "coef": 1.0,
                           "nom": "nomNote1",
-                          "valeur": 1.0
+                          "valeur": 10.0
                         },
                         {
                           "coef": 1.0,
                           "nom": "nomNote2",
-                          "valeur": 2.0
+                          "valeur": 10.0
                         },
                         {
-                          "coefficient": 3.0,
+                          "coef": 1.0,
                           "nom": "DM1",
+                          "valeur": 10.0
+                        },
+                        {
+                          "coef": 1.0,
+                          "nom": "test",
                           "valeur": 10.0
                         }
                       ]
@@ -46,22 +67,43 @@
                     {
                       "appreciation": "appreciationMatiere",
                       "coef": 1.0,
-                      "nom": "nomMatiere",
+                      "nom": "matiere2",
+                      "notes": [
+                        {"coef": 1.0,
+                          "nom": "nomNoteM2",
+                          "valeur": 14.0}]},
+                    {
+                      "appreciation": "appreciationMatiere",
+                      "coef": 1.0,
+                      "nom": "matiere3",
+                      "notes": [
+                        {"coef": 1.0,
+                          "nom": "nomNoteM3",
+                          "valeur": 14.0}]},
+                    {
+                      "appreciation": "appreciationMatiere",
+                      "coef": 1.0,
+                      "nom": "matiere1",
                       "notes": [
                         {
-                          "coef": 1.2,
+                          "coef": 1.0,
                           "nom": "nomNote1.2",
-                          "valeur": 1.2
+                          "valeur": 12.0
                         },
                         {
-                          "coef": 1.2,
+                          "coef": 1.0,
                           "nom": "nomNote2.2",
-                          "valeur": 2.2
+                          "valeur": 12.0
                         },
                         {
-                          "coefficient": 3.0,
+                          "coef": 1.0,
                           "nom": "DM1",
-                          "valeur": 20.0
+                          "valeur": 12.0
+                        },
+                        {
+                          "coef": 1.0,
+                          "nom": "test",
+                          "valeur": 12.0
                         }
                       ]
                     }
