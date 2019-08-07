@@ -215,6 +215,108 @@
      <property name="currentIndex">
       <number>1</number>
      </property>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Affichage des Moyennes par Matière</string>
+      </attribute>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>740</x>
+         <y>90</y>
+         <width>401</width>
+         <height>501</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <layout class="QHBoxLayout" name="lRadar">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMaximumSize</enum>
+          </property>
+         </layout>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_6">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pbImpressionPdf">
+          <property name="text">
+           <string>Impression Bulletin pdf</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pbExportCsv">
+          <property name="text">
+           <string>Exporter les notes en csv</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="verticalLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>30</y>
+         <width>701</width>
+         <height>631</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Moyenne par Elève par Matière</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="twAffichageMoyennes">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>Saisie des Notes</string>
@@ -228,16 +330,6 @@
          <height>601</height>
         </rect>
        </property>
-       <column>
-        <property name="text">
-         <string>Elève</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Notes</string>
-        </property>
-       </column>
       </widget>
       <widget class="QPushButton" name="pbNoteAjout">
        <property name="geometry">
@@ -353,72 +445,6 @@
          </layout>
         </item>
        </layout>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
-       <string>Affichage des Moyennes par Matière</string>
-      </attribute>
-      <widget class="QTableWidget" name="twAffichageMoyennes">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>60</y>
-         <width>551</width>
-         <height>601</height>
-        </rect>
-       </property>
-       <column>
-        <property name="text">
-         <string>Elève</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Matière1</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Matière2</string>
-        </property>
-       </column>
-      </widget>
-      <widget class="QPushButton" name="pbImpressionPdf">
-       <property name="geometry">
-        <rect>
-         <x>710</x>
-         <y>570</y>
-         <width>151</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Impression Bulletin pdf</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pbExportCsv">
-       <property name="geometry">
-        <rect>
-         <x>920</x>
-         <y>570</y>
-         <width>151</width>
-         <height>23</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Exporter les notes en csv</string>
-       </property>
-      </widget>
-      <widget class="QWidget" name="wGraph" native="true">
-       <property name="geometry">
-        <rect>
-         <x>620</x>
-         <y>60</y>
-         <width>531</width>
-         <height>481</height>
-        </rect>
-       </property>
       </widget>
      </widget>
     </widget>
