@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:/Users/AELION/AppData/Local/Temp/PP_Design_v1uNPgdp.ui',
-# licensing of 'C:/Users/AELION/AppData/Local/Temp/PP_Design_v1uNPgdp.ui' applies.
+# Form implementation generated from reading ui file 'C:/Users/AELION/AppData/Local/Temp/PP_Design_v1UjJqsd.ui',
+# licensing of 'C:/Users/AELION/AppData/Local/Temp/PP_Design_v1UjJqsd.ui' applies.
 #
-# Created: Tue Aug  6 22:40:42 2019
+# Created: Thu Aug  8 11:53:28 2019
 #      by: pyside2-uic  running on PySide2 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -104,10 +104,9 @@ class Ui_Form(object):
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.lRadar = QtWidgets.QHBoxLayout()
-        self.lRadar.setSizeConstraint(QtWidgets.QLayout.SetMaximumSize)
-        self.lRadar.setObjectName("lRadar")
-        self.verticalLayout_5.addLayout(self.lRadar)
+        self.qRadar = QtWidgets.QVBoxLayout()
+        self.qRadar.setObjectName("qRadar")
+        self.verticalLayout_5.addLayout(self.qRadar)
         spacerItem3 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_5.addItem(spacerItem3)
         self.pbImpressionPdf = QtWidgets.QPushButton(self.verticalLayoutWidget)

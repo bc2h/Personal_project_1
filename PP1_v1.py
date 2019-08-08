@@ -43,6 +43,7 @@ class EditeurNote(QWidget):
         self.ui.cbClasseSelect.currentIndexChanged.connect(self.majAffichageMoyenne)
         self.ui.pbNoteAjout.clicked.connect(self.ajoutNote)
         self.ui.pbNoteAjout.clicked.connect(self.majAffichageMoyenne)
+        # self.ui.twAffichageMoyennes.itemClicked.connect(self.itemClicked)
         self.ui.twAffichageMoyennes.itemClicked.connect(self.radar)
 
         self.majAcademies()
@@ -175,11 +176,11 @@ class EditeurNote(QWidget):
         header = np.insert(listMatieresUniques, 0, "Prénom")
         header = np.insert(header, 0, "Nom")
         self.ui.twAffichageMoyennes.setColumnCount(len(header))  # pour avoir X colonnes
-        self.ui.twAffichageMoyennes.setHorizontalHeaderLabels(header)  # pour avoir les titre de colonne
+        self.ui.twAffichageMoyennes.setHorizontalHeaderLabels(header)  # pour avoir les titres de colonne
 
         # header = ["Nom", "Prénom", "Matière"]
         # self.ui.twAffichageMoyennes.setColumnCount(len(header))  # pour avoir X colonnes
-        # self.ui.twAffichageMoyennes.setHorizontalHeaderLabels(header)
+        # self.ui.twAffichageMoyennes.setHorizontalHeaderItem(header)
 
         cptRow = 0
         for eleves in dicoEleves:
@@ -191,22 +192,35 @@ class EditeurNote(QWidget):
             itemEp = QTableWidgetItem(prenomE)
             self.ui.twAffichageMoyennes.setItem(cptRow, 1, itemEp)
             cptCol = 2
+            # print(eleves["nom"])
             for matiere in eleves["matieres"]:
                 # self.ui.twAffichageMoyennes.setColumnCount(cptCol + 1)
-                itemMat = QTableWidgetItem(matiere["nom"])
-                self.ui.twAffichageMoyennes.setHorizontalHeaderItem(cptCol, itemMat)
-                # Calcul Moyennes
-                sumNoteE = 0
-                sumCoefE = 0
-                for note in matiere["notes"]:
-                    sumNoteE += note["valeur"]*note["coef"]
-                    sumCoefE += note["coef"]
-                moyEleve = str(sumNoteE / sumCoefE)
-                # Affichage moyennes
-                itemEmoy = QTableWidgetItem(moyEleve)
-                self.ui.twAffichageMoyennes.setItem(cptRow, cptCol, itemEmoy)
-                cptCol += 1
-                # print(eleves["nom"], eleves["prenom"], moyEleve)
+                # itemMat = QTableWidgetItem(matiere["nom"])
+                # self.ui.twAffichageMoyennes.setHorizontalHeaderItem(cptCol, itemMat)
+                mat = self.ui.twAffichageMoyennes.horizontalHeaderItem(cptCol).text()
+                # print('199', mat, matiere["nom"])
+                if matiere["nom"] != mat:
+                    end = 0
+                    while matiere["nom"] != mat and end < len(eleves["matieres"]):
+                        end += 1
+                        cptCol += 1
+                        mat = self.ui.twAffichageMoyennes.horizontalHeaderItem(cptCol).text()
+                        # print('while', mat, matiere["nom"])
+                if matiere["nom"] == mat:
+                    # Calcul Moyennes
+                    sumNoteE = 0
+                    sumCoefE = 0
+                    for note in matiere["notes"]:
+                        sumNoteE += note["valeur"]*note["coef"]
+                        sumCoefE += note["coef"]
+                    moyEleve = str(sumNoteE / sumCoefE)
+                    # Affichage moyennes
+                    itemEmoy = QTableWidgetItem(moyEleve)
+                    self.ui.twAffichageMoyennes.setItem(cptRow, cptCol, itemEmoy)
+                    cptCol=2
+                    # print('for', mat, matiere["nom"])
+                else:
+                    print('error occur')
             cptRow += 1
 
 
@@ -222,26 +236,35 @@ class EditeurNote(QWidget):
         f.write(jsonClasse)
         f.close()
 
-    def radar(self): #, matieres, moyEleve, moyClasse):
-        print("radar")
+    def itemClicked(self, item):
+        print
+        "text=%s, row=%d, column=%d" % (
+            item.text(), item.row() + 1, item.column() + 1)
 
-        self.ui.twAffichageMoyennes.itemClicked
+    def radar(self):
+        if self.ui.qRadar.count()>=1:
+            self.ui.qRadar.removeWidget(self.canvas)
+        # print("radar")
+        row = self.ui.twAffichageMoyennes.currentRow()
 
-        dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
-            ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
-            ["classes"][self.ui.cbClasseSelect.currentIndex()] \
-            ["eleves"]
+        nomEleve= self.ui.twAffichageMoyennes.item(row, 0).text()
+        prenomEleve= self.ui.twAffichageMoyennes.item(row, 1).text()
+        eleveR=[nomEleve,  prenomEleve]
 
-        listMatieres = []
-        for eleves in dicoEleves:
-            for ma in eleves["matieres"]:
-                listMatieres.append(ma["nom"])
-            eleveR = (eleves["nom"], eleves["prenom"])
-        listMatieresUniques = np.unique(listMatieres)
-        print(eleveR)
+        col = 2
+        radarMatiere = []
+        radarMoy = []
+        for col in range(col, self.ui.twAffichageMoyennes.columnCount()):
+            if self.ui.twAffichageMoyennes.item(row, col) is not None:
+                matR = self.ui.twAffichageMoyennes.horizontalHeaderItem(col).text()
+                moyR = float(self.ui.twAffichageMoyennes.item(row, col).text())
+                radarMatiere.append(matR)
+                radarMoy.append(moyR)
+                col += 1
+            print("none", radarMoy, radarMatiere)
 
-        labels = listMatieresUniques
-        moys = [10, 15, 18]
+        labels = radarMatiere
+        moys = radarMoy
 
         angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False)
         # close the plot
@@ -253,16 +276,16 @@ class EditeurNote(QWidget):
         ax.plot(angles, stats, 'o-', linewidth=2)
         ax.fill(angles, stats, alpha=0.25)
         ax.set_thetagrids(angles * 180 / np.pi, labels)
-        plt.yticks([5, 10, 15], color="grey", size=7)
+        plt.yticks([2,4,6,8,10,12,14,16,18], color="grey", size=7)
         plt.ylim(0, 20)
 
         ax.set_title(eleveR)
         ax.grid(True)
 
-        self.canvas = FigureCanvas(self.fig)
-        self.ui.lRadar.addWidget(self.canvas)  # the matplotlib canvas
+        self.canvas = FigureCanvas(self.fig)# the matplotlib canvas
+        self.ui.qRadar.addWidget(self.canvas)
 
-        self.setLayout(self.ui.lRadar)
+        self.setLayout(self.ui.qRadar)
         self.show()
 
 
