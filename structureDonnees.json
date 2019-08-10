@@ -14,7 +14,7 @@
                   "appreciationPP": "appreciationEleve",
                   "matieres": [
                     {
-                      "appreciation": "appreciationMatiere",
+                      "appreciation": "appreciationMatiere3",
                       "coef": 1.0,
                       "nom": "matiere3",
                       "notes": [
@@ -22,7 +22,7 @@
                           "nom": "nomNoteM3",
                           "valeur": 15.0}]},
                     {
-                      "appreciation": "appreciationMatiere",
+                      "appreciation": "appreciationMatiere2",
                       "coef": 1.0,
                       "nom": "matiere2",
                       "notes": [
@@ -30,7 +30,7 @@
                           "nom": "nomNoteM2",
                           "valeur": 13.0}]},
                     {
-                      "appreciation": "appreciationMatiere",
+                      "appreciation": "appreciationMatiere4",
                       "coef": 1.0,
                       "nom": "matiere4",
                       "notes": [
@@ -38,7 +38,7 @@
                           "nom": "nomNoteM4",
                           "valeur": 9.0}]},
                     {
-                      "appreciation": "appreciationMatiere",
+                      "appreciation": "appreciationMatiere1",
                       "coef": 1.0,
                       "nom": "matiere1",
                       "notes": [
@@ -73,7 +73,7 @@
                   "appreciationPP": "appreciationEleve2",
                   "matieres": [
                     {
-                      "appreciation": "appreciationMatiere",
+                      "appreciation": "appreciationMatiere2",
                       "coef": 1.0,
                       "nom": "matiere2",
                       "notes": [
@@ -81,7 +81,7 @@
                           "nom": "nomNoteM2",
                           "valeur": 14.0}]},
                     {
-                      "appreciation": "appreciationMatiere",
+                      "appreciation": "appreciationMatiere4",
                       "coef": 1.0,
                       "nom": "matiere4",
                       "notes": [
@@ -89,7 +89,7 @@
                           "nom": "nomNoteM4",
                           "valeur": 8.0}]},
                     {
-                      "appreciation": "appreciationMatiere",
+                      "appreciation": "appreciationMatiere1",
                       "coef": 1.0,
                       "nom": "matiere1",
                       "notes": [
