@@ -666,7 +666,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="cbMatiereSelect_7"/>
+               <widget class="QComboBox" name="cbMatiereSelectSuppr"/>
               </item>
              </layout>
             </item>
@@ -695,12 +695,12 @@
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="cbMatiereSelect_9"/>
+               <widget class="QComboBox" name="cbMatiereSelectDevoirSuppr"/>
               </item>
              </layout>
             </item>
             <item>
-             <widget class="QPushButton" name="pbMatiereSuppr">
+             <widget class="QPushButton" name="pbDevoirSuppr">
               <property name="text">
                <string>Suppression</string>
               </property>

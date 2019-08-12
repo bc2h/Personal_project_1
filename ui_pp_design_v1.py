@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:/Users/AELION/AppData/Local/Temp/PP_Design_v1uFgxan.ui',
-# licensing of 'C:/Users/AELION/AppData/Local/Temp/PP_Design_v1uFgxan.ui' applies.
+# Form implementation generated from reading ui file 'C:/Users/AELION/AppData/Local/Temp/PP_Design_v1rYVcUf.ui',
+# licensing of 'C:/Users/AELION/AppData/Local/Temp/PP_Design_v1rYVcUf.ui' applies.
 #
-# Created: Sat Aug 10 22:40:21 2019
+# Created: Mon Aug 12 00:01:42 2019
 #      by: pyside2-uic  running on PySide2 5.13.0
 #
 # WARNING! All changes made in this file will be lost!
@@ -314,9 +314,9 @@ class Ui_Form(object):
         self.label_24.setMinimumSize(QtCore.QSize(130, 0))
         self.label_24.setObjectName("label_24")
         self.horizontalLayout_17.addWidget(self.label_24)
-        self.cbMatiereSelect_7 = QtWidgets.QComboBox(self.verticalLayoutWidget_5)
-        self.cbMatiereSelect_7.setObjectName("cbMatiereSelect_7")
-        self.horizontalLayout_17.addWidget(self.cbMatiereSelect_7)
+        self.cbMatiereSelectSuppr = QtWidgets.QComboBox(self.verticalLayoutWidget_5)
+        self.cbMatiereSelectSuppr.setObjectName("cbMatiereSelectSuppr")
+        self.horizontalLayout_17.addWidget(self.cbMatiereSelectSuppr)
         self.verticalLayout_7.addLayout(self.horizontalLayout_17)
         self.horizontalLayout_19 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_19.setObjectName("horizontalLayout_19")
@@ -330,13 +330,13 @@ class Ui_Form(object):
         self.label_26.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.label_26.setObjectName("label_26")
         self.horizontalLayout_19.addWidget(self.label_26)
-        self.cbMatiereSelect_9 = QtWidgets.QComboBox(self.verticalLayoutWidget_5)
-        self.cbMatiereSelect_9.setObjectName("cbMatiereSelect_9")
-        self.horizontalLayout_19.addWidget(self.cbMatiereSelect_9)
+        self.cbMatiereSelectDevoirSuppr = QtWidgets.QComboBox(self.verticalLayoutWidget_5)
+        self.cbMatiereSelectDevoirSuppr.setObjectName("cbMatiereSelectDevoirSuppr")
+        self.horizontalLayout_19.addWidget(self.cbMatiereSelectDevoirSuppr)
         self.verticalLayout_7.addLayout(self.horizontalLayout_19)
-        self.pbMatiereSuppr = QtWidgets.QPushButton(self.verticalLayoutWidget_5)
-        self.pbMatiereSuppr.setObjectName("pbMatiereSuppr")
-        self.verticalLayout_7.addWidget(self.pbMatiereSuppr)
+        self.pbDevoirSuppr = QtWidgets.QPushButton(self.verticalLayoutWidget_5)
+        self.pbDevoirSuppr.setObjectName("pbDevoirSuppr")
+        self.verticalLayout_7.addWidget(self.pbDevoirSuppr)
         self.verticalLayout_3.addLayout(self.verticalLayout_7)
         spacerItem10 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem10)
@@ -376,7 +376,7 @@ class Ui_Form(object):
         self.label_10.setText(QtWidgets.QApplication.translate("Form", "Suppression devoir", None, -1))
         self.label_24.setText(QtWidgets.QApplication.translate("Form", "Matière *", None, -1))
         self.label_26.setText(QtWidgets.QApplication.translate("Form", "Nom du devoir *", None, -1))
-        self.pbMatiereSuppr.setText(QtWidgets.QApplication.translate("Form", "Suppression", None, -1))
+        self.pbDevoirSuppr.setText(QtWidgets.QApplication.translate("Form", "Suppression", None, -1))
         self.label_98.setText(QtWidgets.QApplication.translate("Form", "* Champs obligatoires", None, -1))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtWidgets.QApplication.translate("Form", "Saisie des Notes", None, -1))
 

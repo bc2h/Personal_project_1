@@ -10,11 +10,11 @@
 # METHODE PROCEDURALE:
 import sys, json
 from PySide2 import QtCore
-from PySide2.QtWidgets import (QWidget, QApplication, QTableWidgetItem, QDoubleSpinBox, QLabel,
+from PySide2.QtWidgets import (QWidget, QApplication, QTableWidgetItem, QDoubleSpinBox, QMessageBox, QLabel,
                                QPushButton,QVBoxLayout, QHBoxLayout, QLineEdit, QListWidget, QSpacerItem, QInputDialog )
 from PySide2.QtCore import SIGNAL
-from ui_PP_Design_v1_2 import Ui_Form
-from ui_pp_Design_v2 import Ui_Form_W2
+from ui_pp_design_v1 import Ui_Form     #design fenetre principale
+from ui_pp_Design_v2 import Ui_Form_W2  #design fenetre secondaire
 from pylab import *
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 
@@ -51,27 +51,23 @@ class EditeurNote(QWidget):
 
         self.majAcademies()
 
-    # faire une liste des académies
-    def majAcademies(self):
+    def majAcademies(self): # creation liste académies  + maj comboBox
         self.ui.cbAcademieSelect.clear()
         listAcademies = [ac["nom"] for ac in self.dicoJson["academies"]]
         self.ui.cbAcademieSelect.addItems(listAcademies)
-        # print(listAcademies)
-    # faire une liste des etablissements
-    def majEtablissements(self):
+        print("majAca")
+    def majEtablissements(self): # creation liste etablissements  + maj comboBox
         self.ui.cbEtablissementSelect.clear()
         listEtablissements=[et["nom"] for et in self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()]["etablissements"]]
         self.ui.cbEtablissementSelect.addItems(listEtablissements)
         # print(listEtablissements)
-    # faire une liste des classes
-    def majClasses(self):
+    def majClasses(self): # creation liste des classes + maj comboBox
         self.ui.cbClasseSelect.clear()
         listClasses=[cl["nom"] for cl in self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
                     ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()]["classes"]]
         self.ui.cbClasseSelect.addItems(listClasses)
         # print(listClasses)
-    # recup liste eleves puis liste des matières de tous les eleves sans doublons (np.unique)
-    def majMatiere(self):
+    def majMatiere(self): #recup liste eleves + liste matières de tous eleves sans doublons (np.unique) + maj comboBox
         self.ui.cbMatiereSelect.clear()
         self.ui.cbMatiereSelectSuppr.clear()
         dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
@@ -174,35 +170,36 @@ class EditeurNote(QWidget):
             itemEp = QTableWidgetItem(prenomE)
             self.ui.twAffichageMoyennes.setItem(cptRow, 1, itemEp)
             cptCol = 2
-            # print(eleves["nom"])
+            print(eleves["nom"])
             for matiere in eleves["matieres"]:
                 # self.ui.twAffichageMoyennes.setColumnCount(cptCol + 1)
                 # itemMat = QTableWidgetItem(matiere["nom"])
                 # self.ui.twAffichageMoyennes.setHorizontalHeaderItem(cptCol, itemMat)
                 mat = self.ui.twAffichageMoyennes.horizontalHeaderItem(cptCol).text()
-                # print('199', mat, matiere["nom"])
                 if matiere["nom"] != mat:
                     end = 0
-                    while matiere["nom"] != mat and end < len(eleves["matieres"]):
+                    print(len(eleves["matieres"]), matiere["nom"], matiere["notes"])
+                    while matiere["nom"] != mat and end < (len(header)-2):
                         end += 1
                         cptCol += 1
                         mat = self.ui.twAffichageMoyennes.horizontalHeaderItem(cptCol).text()
-                        # print('while', mat, matiere["nom"])
-                if matiere["nom"] == mat:
+                        print('while', mat, matiere["nom"])
+                if matiere["nom"] == mat and matiere["notes"] != []:
                     # Calcul Moyennes
                     sumNoteE = 0
                     sumCoefE = 0
                     for note in matiere["notes"]:
-                        sumNoteE += note["valeur"]*note["coef"]
-                        sumCoefE += note["coef"]
+                            sumNoteE += note["valeur"]*note["coef"]
+                            sumCoefE += note["coef"]
                     moyEleve = str(sumNoteE / sumCoefE)
                     # Affichage moyennes
                     itemEmoy = QTableWidgetItem(moyEleve)
                     self.ui.twAffichageMoyennes.setItem(cptRow, cptCol, itemEmoy)
                     cptCol=2
-                    # print('for', mat, matiere["nom"])
+                    print('for', matiere["nom"])
                 else:
-                    print('error occur')
+                    cptCol=2
+                    print('pass', matiere["nom"], "notes", matiere["notes"])
             cptRow += 1
     def lireJSON(self,fileName):
         with open(fileName) as json_file:
@@ -217,24 +214,34 @@ class EditeurNote(QWidget):
     def radar(self):
         if self.ui.qRadar.count()>=1:
             self.ui.qRadar.removeWidget(self.canvas)
-        # print("radar")
+        dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
+            ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
+            ["classes"][self.ui.cbClasseSelect.currentIndex()] \
+            ["eleves"]
         row = self.ui.twAffichageMoyennes.currentRow()
-
         nomEleve= self.ui.twAffichageMoyennes.item(row, 0).text()
         prenomEleve= self.ui.twAffichageMoyennes.item(row, 1).text()
         eleveR=[nomEleve,  prenomEleve]
-
-        col = 2
         radarMatiere = []
         radarMoy = []
-        for col in range(col, self.ui.twAffichageMoyennes.columnCount()):
-            if self.ui.twAffichageMoyennes.item(row, col) is not None:
-                matR = self.ui.twAffichageMoyennes.horizontalHeaderItem(col).text()
-                moyR = float(self.ui.twAffichageMoyennes.item(row, col).text())
-                radarMatiere.append(matR)
-                radarMoy.append(moyR)
-                col += 1
-            # print("none", radarMoy, radarMatiere)
+        for eleve in dicoEleves :
+            print(eleve["nom"])
+            if eleve["nom"] == nomEleve and eleve["prenom"] == prenomEleve:
+                for matiere in eleve["matieres"]:
+                    print(eleve["nom"], matiere["nom"])
+                    if matiere["notes"]!= []:
+                        # Calcul Moyennes
+                        sumNoteE = 0
+                        sumCoefE = 0
+                        for note in matiere["notes"]:
+                            sumNoteE += note["valeur"] * note["coef"]
+                            sumCoefE += note["coef"]
+                        moyEleve = sumNoteE / sumCoefE
+                        matR = matiere["nom"]
+                        moyR = moyEleve
+                        radarMatiere.append(matR)
+                        radarMoy.append(moyR)
+                print("radar", radarMoy, radarMatiere)
 
         labels = radarMatiere
         moys = radarMoy
@@ -263,7 +270,7 @@ class EditeurNote(QWidget):
     def nwGestionBd (self):
         self.gestionBd = GestionBd() #Lance la deuxième fenêtre
         # # en cas de signal "fermetureNwGestionBd()" reçu de self.gestionBd => exécutera gestionBd
-        # self.connect(self.gestionBd, SIGNAL("fermetureNwGestionBd(PyQt_PyObject)"))
+        # self.connect(self.gestionBd, SIGNAL("fermetureNwGestionBd(PyQt_PyObject)"), self.majAcademies )
         # la deuxième fenêtre sera 'modale' (la première fenêtre sera inactive)
         self.gestionBd.setWindowModality(QtCore.Qt.ApplicationModal)
         # appel de la deuxième fenêtre
@@ -284,18 +291,18 @@ class GestionBd(QWidget):
         self.ui2.BDcbMatClaSelect.currentIndexChanged.connect(self.majMatEle)
         self.ui2.BDcbMatEleNoSelect.currentIndexChanged.connect(self.majMat)
         self.ui2.BDcbMatModifSelect.currentIndexChanged.connect(self.majMatModif)
-        self.ui2.BDpbMatModifValid.clicked.connect(self.modifMat)
+        self.ui2.BDpbMatModifValid.clicked.connect(self.confirmModifMat)
         self.ui2.BDpbMatAjoutValid.clicked.connect(self.ajoutMat)
-        self.ui2.BDpbMatSupprValid.clicked.connect(self.supprMat)
+        self.ui2.BDpbMatSupprValid.clicked.connect(self.confirmSupprMat)
         self.majMatAca()
 # ELEVE__________________________________________________________________________
         self.ui2.BDcbEleAcaSelect.currentIndexChanged.connect(self.majEleEta)
         self.ui2.BDcbEleEtaSelect.currentIndexChanged.connect(self.majEleCla)
         self.ui2.BDcbEleClaSelect.currentIndexChanged.connect(self.majEle)
         self.ui2.BDcbEleModifSelectNom.currentIndexChanged.connect(self.majEleModif)
-        self.ui2.BDpbEleModifValid.clicked.connect(self.modifEle)
+        self.ui2.BDpbEleModifValid.clicked.connect(self.confirmModifEle)
         self.ui2.BDpbEleAjoutValid.clicked.connect(self.ajoutEle)
-        self.ui2.BDpbEleSupprValid.clicked.connect(self.supprEle)
+        self.ui2.BDpbEleSupprValid.clicked.connect(self.confirmSupprEle)
         self.majEleAca()
 
 # MATIERE__________________________________________________________________________
@@ -381,7 +388,7 @@ class GestionBd(QWidget):
         if nomMat == '' or coefMat == 0.0:
             print("stop")
         else:
-            dicoAjoutMat.append({"nom": nomMat, "coef": coefMat, "appreciation": appMat})
+            dicoAjoutMat.append({"nom": nomMat, "coef": coefMat, "appreciation": appMat, "notes":[]})
             print("Matière ajoutée !")
             # self.sauveJSON(filename)
             self.majMat()
@@ -399,6 +406,33 @@ class GestionBd(QWidget):
         print("Matière supprimée !")
         # self.sauveJSON(filename)
         self.majMat()
+    def confirmSupprMat(self):
+        print("confirm suppr")
+        msgSuppr = QMessageBox()
+        msgSuppr.setWindowTitle("Suppression")
+        msgSuppr.setText("Confirmer la suppression de la matière: {}".format(self.ui2.BDcbMatSupprSelect.currentText()))
+        msgSuppr.setStandardButtons(QMessageBox.Yes| QMessageBox.No)
+        buttonY = msgSuppr.button(QMessageBox.Yes)
+        buttonN = msgSuppr.button(QMessageBox.No)
+        msgSuppr.exec()
+        if msgSuppr.clickedButton() == buttonY:
+            self.supprMat()
+        elif msgSuppr.clickedButton() == buttonN:
+            pass
+    def confirmModifMat(self):
+        print("confirm modif")
+        msgModif = QMessageBox()
+        msgModif.setWindowTitle("Modification")
+        msgModif.setText(
+            "Confirmer la modification de la matière: {}".format(self.ui2.BDcbMatModifSelect.currentText()))
+        msgModif.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        buttonY= msgModif.button(QMessageBox.Yes)
+        buttonN= msgModif.button(QMessageBox.No)
+        msgModif.exec()
+        if msgModif.clickedButton() == buttonY:
+            self.modifMat()
+        elif msgModif.clickedButton() == buttonN:
+            pass
 
 # ELEVE__________________________________________________________________________
     def majEleAca(self):
@@ -458,12 +492,12 @@ class GestionBd(QWidget):
         dicoModifEle["nom"] = self.ui2.BDleEleModifNom.text()
         dicoModifEle["prenom"] = self.ui2.BDleEleModifPrenom.text()
         dicoModifEle["adresse"] = self.ui2.BDleEleModifAdres.text()
-        dicoModifEle["appreciation"] = self.ui2.BDleEleModifApp.text()
+        dicoModifEle["appreciationPP"] = self.ui2.BDleEleModifApp.text()
         if dicoModifEle["nom"] == '' or dicoModifEle["prenom"] == '':
             print("stop")
         else:
             print("Elève modifié !")
-            # self.sauveJSON(filename)
+            self.sauveJSON(filename)
             self.majEle()
     def ajoutEle(self):
         dicoAjoutEle = self.dicoJson["academies"][self.ui2.BDcbEleAcaSelect.currentIndex()] \
@@ -478,9 +512,10 @@ class GestionBd(QWidget):
         if nomEle == '' or prenomEle == '':
             print("stop")
         else:
-            dicoAjoutEle.append({"nom": nomEle, "prenom": prenomEle, "adresse": adresEle, "appreciationPP": appEle})
+            dicoAjoutEle.append({"nom": nomEle, "prenom": prenomEle, "adresse": adresEle, "appreciationPP": appEle, \
+                                "matieres": []})
             print("Elève ajouté !")
-            # self.sauveJSON(filename)
+            self.sauveJSON(filename)
             self.majEle()
             self.ui2.BDleEleAjoutNom.clear()
             self.ui2.BDleEleAjoutPrenom.clear()
@@ -491,11 +526,38 @@ class GestionBd(QWidget):
             ["etablissements"][self.ui2.BDcbEleEtaSelect.currentIndex()] \
             ["classes"][self.ui2.BDcbEleClaSelect.currentIndex()] \
             ["eleves"]
-
         dicoModifEle.pop(self.ui2.BDcbEleSupprSelectNom.currentIndex())
         print("Elève supprimé !")
-        # self.sauveJSON(filename)
+        self.sauveJSON(filename)
         self.majEle()
+    def confirmSupprEle(self):
+        print("confirm suppr")
+        msgSuppr = QMessageBox()
+        msgSuppr.setWindowTitle("Suppression")
+        msgSuppr.setText("Confirmer la suppression de l'élève: {}".format(self.ui2.BDcbEleSupprSelectNom.currentText()))
+        msgSuppr.setStandardButtons(QMessageBox.Yes| QMessageBox.No)
+        buttonY = msgSuppr.button(QMessageBox.Yes)
+        buttonN = msgSuppr.button(QMessageBox.No)
+        msgSuppr.exec()
+        if msgSuppr.clickedButton() == buttonY:
+            self.supprEle()
+        elif msgSuppr.clickedButton() == buttonN:
+            pass
+    def confirmModifEle(self):
+        print("confirm modif")
+        msgModif = QMessageBox()
+        msgModif.setWindowTitle("Modification")
+        msgModif.setText(
+            "Confirmer la modification de l'élève: {}".format(self.ui2.BDcbEleModifSelectNom.currentText()))
+        msgModif.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        buttonY= msgModif.button(QMessageBox.Yes)
+        buttonN= msgModif.button(QMessageBox.No)
+        msgModif.exec()
+        if msgModif.clickedButton() == buttonY:
+            self.modifEle()
+        elif msgModif.clickedButton() == buttonN:
+            pass
+
 
 # JSON__________________________________________________________________________
     def lireJSON(self,fileName):
