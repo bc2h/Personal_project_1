@@ -21,7 +21,7 @@
                         {
                           "coef": 1.0,
                           "nom": "nomNoteM3",
-                          "valeur": 15.0
+                          "valeur": 6.0
                         }
                       ]
                     },
@@ -33,7 +33,7 @@
                         {
                           "coef": 1.0,
                           "nom": "nomNoteM2",
-                          "valeur": 13.0
+                          "valeur": 4.0
                         }
                       ]
                     },
@@ -45,7 +45,7 @@
                         {
                           "coef": 1.0,
                           "nom": "nomNoteM4",
-                          "valeur": 9.0
+                          "valeur": 8.0
                         }
                       ]
                     },
@@ -57,22 +57,22 @@
                         {
                           "coef": 1.0,
                           "nom": "nomNote1",
-                          "valeur": 10.0
+                          "valeur": 1.0
                         },
                         {
                           "coef": 1.0,
                           "nom": "nomNote2",
-                          "valeur": 12.0
+                          "valeur": 3.0
                         },
                         {
                           "coef": 1.0,
                           "nom": "DM1",
-                          "valeur": 12.0
+                          "valeur": 1.0
                         },
                         {
                           "coef": 1.0,
                           "nom": "test",
-                          "valeur": 10.0
+                          "valeur": 3.0
                         }
                       ]
                     },
@@ -98,7 +98,7 @@
                         {
                           "coef": 1.0,
                           "nom": "nomNoteM2",
-                          "valeur": 14.0
+                          "valeur": 15.0
                         }
                       ]
                     },
@@ -110,7 +110,7 @@
                         {
                           "coef": 1.0,
                           "nom": "nomNoteM4",
-                          "valeur": 8.0
+                          "valeur": 19.0
                         }
                       ]
                     },
@@ -122,22 +122,22 @@
                         {
                           "coef": 1.0,
                           "nom": "nomNote1.2",
-                          "valeur": 11.0
+                          "valeur": 10.0
                         },
                         {
                           "coef": 1.0,
                           "nom": "nomNote2.2",
-                          "valeur": 13.0
+                          "valeur": 12.0
                         },
                         {
                           "coef": 1.0,
                           "nom": "DM1",
-                          "valeur": 11.0
+                          "valeur": 10.0
                         },
                         {
                           "coef": 1.0,
                           "nom": "test",
-                          "valeur": 13.0
+                          "valeur": 12.0
                         }
                       ]
                     }

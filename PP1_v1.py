@@ -12,7 +12,7 @@ import sys, json
 from PySide2 import QtCore
 from PySide2.QtWidgets import (QWidget, QApplication, QTableWidgetItem, QDoubleSpinBox, QMessageBox, QLabel,
                                QPushButton,QVBoxLayout, QHBoxLayout, QLineEdit, QListWidget, QSpacerItem, QInputDialog )
-from PySide2.QtCore import SIGNAL
+import numpy as np
 from ui_pp_design_v1 import Ui_Form     #design fenetre principale
 from ui_pp_Design_v2 import Ui_Form_W2  #design fenetre secondaire
 from pylab import *
@@ -54,18 +54,18 @@ class EditeurNote(QWidget):
         self.ui.cbAcademieSelect.clear()
         listAcademies = [ac["nom"] for ac in self.dicoJson["academies"]]
         self.ui.cbAcademieSelect.addItems(listAcademies)
-        print("majAcademies")
+        # print("majAcademies")
     def majEtablissements(self): # creation liste etablissements  + maj comboBox
         self.ui.cbEtablissementSelect.clear()
         listEtablissements=[et["nom"] for et in self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()]["etablissements"]]
         self.ui.cbEtablissementSelect.addItems(listEtablissements)
-        print("majEtablissements")
+        # print("majEtablissements")
     def majClasses(self): # creation liste des classes + maj comboBox
         self.ui.cbClasseSelect.clear()
         listClasses=[cl["nom"] for cl in self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
                     ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()]["classes"]]
         self.ui.cbClasseSelect.addItems(listClasses)
-        print("majClasses")
+        # print("majClasses")
     def majMatiere(self): #recup liste eleves + liste matières de tous eleves sans doublons (np.unique) + maj comboBox
         self.ui.cbMatiereSelect.clear()
         self.ui.cbMatiereSelectSuppr.clear()
@@ -80,7 +80,7 @@ class EditeurNote(QWidget):
         listMatieresUniques = np.unique(listMatieres)
         self.ui.cbMatiereSelect.addItems(listMatieresUniques)
         self.ui.cbMatiereSelectSuppr.addItems(listMatieresUniques)
-        print("majMatieres")
+        # print("majMatieres")
     def affichageEleves(self):
         cpt= 0
         self.ui.twSaisieNote.clearContents()
@@ -107,7 +107,7 @@ class EditeurNote(QWidget):
                     spinB.setProperty("nom", nomE)
                     self.ui.twSaisieNote.setCellWidget(cpt, 2, spinB)
                     cpt = cpt+1
-        print("affichageEleveTWajoutNote")
+        # print("affichageEleveTWajoutNote")
     def ajoutNote(self):
         dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
             ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
@@ -201,7 +201,7 @@ class EditeurNote(QWidget):
                     cptCol=2
                     # print('pass', matiere["nom"], "notes", matiere["notes"])
             cptRow += 1
-        print("affichageEleveTWradar")
+        # print("affichageEleveTWradar")
     def lireJSON(self,fileName):
         with open(fileName) as json_file:
             dico = json.load(json_file)
@@ -213,7 +213,7 @@ class EditeurNote(QWidget):
         f.write(jsonClasse)
         f.close()
     def radar(self):
-        if self.ui.qRadar.count() >= 1:
+        if self.ui.qRadar.count() >= 2:
             self.ui.qRadar.removeWidget(self.canvas)
         dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
             ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
@@ -225,11 +225,13 @@ class EditeurNote(QWidget):
         eleveR = [nomEleve, prenomEleve]
         radarMatiere = []
         radarMoy = []
+        matListe = []
         for eleve in dicoEleves:
-            print(eleve["nom"])
+            # print(eleve["nom"])
             if eleve["nom"] == nomEleve and eleve["prenom"] == prenomEleve:
+                print(eleve["nom"])
                 for matiere in eleve["matieres"]:
-                    print(eleve["nom"], matiere["nom"])
+                    # print(eleve["nom"], matiere["nom"])
                     if matiere["notes"] != []:
                         # Calcul Moyennes
                         sumNoteE = 0
@@ -239,35 +241,65 @@ class EditeurNote(QWidget):
                             sumCoefE += note["coef"]
                         moyEleve = sumNoteE / sumCoefE
                         matR = matiere["nom"]
-                        moyR = moyEleve
+                        moyER = moyEleve
                         radarMatiere.append(matR)
-                        radarMoy.append(moyR)
-                print("radar", radarMoy, radarMatiere)
-
+                        matListe.append([matR, 0, 0])
+                        radarMoy.append(moyER)
+        for eleve in dicoEleves:
+            # liste de moyenne et nbre eleve par matiere:
+            for matiere in eleve["matieres"]:
+                cpt = 0
+                for m in matListe:
+                    if m[0] == matiere["nom"]:
+                        matListe[cpt][1] += 1
+                        sumNoteCE = 0
+                        sumCoefCE = 0
+                        for note in matiere["notes"]:
+                            sumNoteCE += note["valeur"] * note["coef"]
+                            sumCoefCE += note["coef"]
+                        moyCEleve = sumNoteCE / sumCoefCE
+                        matListe[cpt][2] += moyCEleve
+                        break
+                    # print(m[cpt][0])#,m[cpt][2],m[cpt][1])
+                    # moyClasse=([m[cpt][0],float(m[cpt][2])/float(m[cpt][1])])
+                    cpt += 1
+        # print(matListe)
+        # print(radarMatiere)
+        listMoyC = []
+        for i in range(len(matListe)):
+            listMoyC.append(matListe[i][2]/matListe[i][1])
+        # print(listMoyC)
         labels = radarMatiere
-        moys = radarMoy
+        moysE = radarMoy
+        if moysE==[]:
+            self.ui.qRadar.removeWidget(self.canvas)
+            self.ui.qRadar.isEmpty()
+        else:
+            angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False)
+            # close the plot
+            moyenneEleveR = np.concatenate((moysE, [moysE[0]]))
+            moyenneClasseR = np.concatenate((listMoyC, [listMoyC[0]]))
+            angles = np.concatenate((angles, [angles[0]]))
 
-        angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=False)
-        # close the plot
-        stats = np.concatenate((moys, [moys[0]]))
-        angles = np.concatenate((angles, [angles[0]]))
+            self.fig = plt.figure(figsize=(4,4))
+            ax = self.fig.add_subplot(111, polar=True)
+            ax.plot(angles, moyenneEleveR, 'o-', linewidth=2,label="Moyenne de l'élève")
+            ax.fill(angles, moyenneEleveR, alpha=0.2)
+            ax.plot(angles, moyenneClasseR, 'o-', linewidth=2, label="Moyenne de la classe")
+            ax.fill(angles, moyenneClasseR, alpha=0.2)
+            ax.set_thetagrids(angles * 180 / np.pi, labels)
+            plt.yticks([2, 4, 6, 8, 10, 12, 14, 16, 18], color="grey", size=7)
+            plt.ylim(0, 20)
 
-        self.fig = plt.figure()
-        ax = self.fig.add_subplot(111, polar=True)
-        ax.plot(angles, stats, 'o-', linewidth=2)
-        ax.fill(angles, stats, alpha=0.25)
-        ax.set_thetagrids(angles * 180 / np.pi, labels)
-        plt.yticks([2, 4, 6, 8, 10, 12, 14, 16, 18], color="grey", size=7)
-        plt.ylim(0, 20)
+            ax.set_title(eleveR)
+            ax.grid(True)
+            plt.legend(loc='upper right')
 
-        ax.set_title(eleveR)
-        ax.grid(True)
+            self.canvas = FigureCanvas(self.fig)  # the matplotlib canvas
+            self.ui.qRadar.addWidget(self.canvas)
 
-        self.canvas = FigureCanvas(self.fig)  # the matplotlib canvas
-        self.ui.qRadar.addWidget(self.canvas)
-
-        self.setLayout(self.ui.qRadar)
-        self.show()
+            self.setLayout(self.ui.qRadar)
+            self.show()
     def nwGestionBd (self):
         self.gestionBd = GestionBd() #Lance la deuxième fenêtre
         # la deuxième fenêtre sera 'modale' (la première fenêtre sera inactive)
