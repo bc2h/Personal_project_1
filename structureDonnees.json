@@ -20,7 +20,7 @@
                       "notes": [
                         {
                           "coef": 1.0,
-                          "nom": "nomNoteM3",
+                          "nom": "M3 nomNote 1",
                           "valeur": 6.0
                         }
                       ]
@@ -32,7 +32,7 @@
                       "notes": [
                         {
                           "coef": 1.0,
-                          "nom": "nomNoteM2",
+                          "nom": "M2 nomNote 1",
                           "valeur": 4.0
                         }
                       ]
@@ -44,7 +44,7 @@
                       "notes": [
                         {
                           "coef": 1.0,
-                          "nom": "nomNoteM4",
+                          "nom": "M4 nomNote 1",
                           "valeur": 8.0
                         }
                       ]
@@ -56,22 +56,22 @@
                       "notes": [
                         {
                           "coef": 1.0,
-                          "nom": "nomNote1",
+                          "nom": "M1 nomNote 1",
                           "valeur": 1.0
                         },
                         {
                           "coef": 1.0,
-                          "nom": "nomNote2",
+                          "nom": "M1 nomNote 2",
                           "valeur": 3.0
                         },
                         {
                           "coef": 1.0,
-                          "nom": "DM1",
+                          "nom": "M1 DM1",
                           "valeur": 1.0
                         },
                         {
                           "coef": 1.0,
-                          "nom": "test",
+                          "nom": "M1 test",
                           "valeur": 3.0
                         }
                       ]
@@ -97,7 +97,7 @@
                       "notes": [
                         {
                           "coef": 1.0,
-                          "nom": "nomNoteM2",
+                          "nom": "M2 nomNote 1",
                           "valeur": 15.0
                         }
                       ]
@@ -109,7 +109,7 @@
                       "notes": [
                         {
                           "coef": 1.0,
-                          "nom": "nomNoteM4",
+                          "nom": "M4 nomNote 1",
                           "valeur": 19.0
                         }
                       ]
@@ -121,22 +121,22 @@
                       "notes": [
                         {
                           "coef": 1.0,
-                          "nom": "nomNote1.2",
+                          "nom": "M1 nomNote 1",
                           "valeur": 10.0
                         },
                         {
                           "coef": 1.0,
-                          "nom": "nomNote2.2",
+                          "nom": "M1 nomNote 2",
                           "valeur": 12.0
                         },
                         {
                           "coef": 1.0,
-                          "nom": "DM1",
+                          "nom": "M1 DM1",
                           "valeur": 10.0
                         },
                         {
                           "coef": 1.0,
-                          "nom": "test",
+                          "nom": "M1 test",
                           "valeur": 12.0
                         }
                       ]
@@ -149,8 +149,8 @@
                   "adresse": "modif",
                   "appreciationPP": "",
                   "matieres": [],
-                  "nom": "ajout2",
-                  "prenom": "ajout"
+                  "nom": "update",
+                  "prenom": "modif"
                 }
               ],
               "nom": "nomClasse"

@@ -12,10 +12,10 @@ import sys, json
 from PySide2 import QtCore
 from PySide2.QtWidgets import (QWidget, QApplication, QTableWidgetItem, QDoubleSpinBox, QMessageBox, QLabel,
                                QPushButton,QVBoxLayout, QHBoxLayout, QLineEdit, QListWidget, QSpacerItem, QInputDialog )
-import numpy as np
-from ui_pp_design_v1 import Ui_Form     #design fenetre principale
-from ui_pp_Design_v2 import Ui_Form_W2  #design fenetre secondaire
+from ui_pp_design_v1 import Ui_Editeur_de_Notes     #design fenetre principale
+from ui_pp_Design_v2 import Ui_Gestion_DB           #design fenetre secondaire
 from pylab import *
+from PySide2.QtCore import Signal
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 
 
@@ -25,13 +25,13 @@ filename= "structureDonnees.json"
 class EditeurNote(QWidget):
     def __init__(self):
         super(EditeurNote, self).__init__()
-        self.setWindowTitle(u"Editeur de note")
+        self.setWindowTitle("Editeur de note")
 
         global filename
         self.dicoJson = {}
         self.dicoJson = self.lireJSON(filename)
 
-        self.ui = Ui_Form()
+        self.ui = Ui_Editeur_de_Notes()
         self.ui.setupUi(self)  # permet de charger tous les composants graphiques coder dans un autre fichier
         # partir du fichier .py (au lieu du .ui) permet d'accéder à la complétion cad la liste des fonctions, widgets...
 
@@ -42,8 +42,12 @@ class EditeurNote(QWidget):
         self.ui.cbEtablissementSelect.currentIndexChanged.connect(self.majClasses)
         self.ui.cbClasseSelect.currentIndexChanged.connect(self.majMatiere)
         self.ui.cbClasseSelect.currentIndexChanged.connect(self.majAffichageMoyenne)
-        self.ui.cbMatiereSelect.currentIndexChanged.connect(self.affichageEleves)
+        self.ui.cbNoteMatiereSelect.currentIndexChanged.connect(self.affichageEleves)
+        self.ui.cbNoteMatiereSelect.currentIndexChanged.connect(self.majNote)
+        self.ui.cbNoteModifNomSelect.currentIndexChanged.connect(self.majNoteModif)
         self.ui.pbNoteAjout.clicked.connect(self.ajoutNote)
+        self.ui.pbNoteModif.clicked.connect(self.confirmModifNote)
+        self.ui.pbNoteSuppr.clicked.connect(self.confirmSupprNote)
         self.ui.pbNoteAjout.clicked.connect(self.majAffichageMoyenne)
         self.ui.twAffichageMoyennes.itemClicked.connect(self.radar)
         self.ui.pbGestionDb.clicked.connect(self.nwGestionBd)
@@ -54,21 +58,20 @@ class EditeurNote(QWidget):
         self.ui.cbAcademieSelect.clear()
         listAcademies = [ac["nom"] for ac in self.dicoJson["academies"]]
         self.ui.cbAcademieSelect.addItems(listAcademies)
-        # print("majAcademies")
+        print("majAcademies")
     def majEtablissements(self): # creation liste etablissements  + maj comboBox
         self.ui.cbEtablissementSelect.clear()
         listEtablissements=[et["nom"] for et in self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()]["etablissements"]]
         self.ui.cbEtablissementSelect.addItems(listEtablissements)
-        # print("majEtablissements")
+        print("majEtablissements")
     def majClasses(self): # creation liste des classes + maj comboBox
         self.ui.cbClasseSelect.clear()
         listClasses=[cl["nom"] for cl in self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
                     ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()]["classes"]]
         self.ui.cbClasseSelect.addItems(listClasses)
-        # print("majClasses")
+        print("majClasses")
     def majMatiere(self): #recup liste eleves + liste matières de tous eleves sans doublons (np.unique) + maj comboBox
-        self.ui.cbMatiereSelect.clear()
-        self.ui.cbMatiereSelectSuppr.clear()
+        self.ui.cbNoteMatiereSelect.clear()
         dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
                             ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
                             ["classes"][self.ui.cbClasseSelect.currentIndex()] \
@@ -78,13 +81,55 @@ class EditeurNote(QWidget):
             for ma in eleves["matieres"]:
                 listMatieres.append(ma["nom"])
         listMatieresUniques = np.unique(listMatieres)
-        self.ui.cbMatiereSelect.addItems(listMatieresUniques)
-        self.ui.cbMatiereSelectSuppr.addItems(listMatieresUniques)
-        # print("majMatieres")
+        self.ui.cbNoteMatiereSelect.addItems(listMatieresUniques)
+        self.majNote()
+        print("majMatieres")
+    def majNote(self):
+        self.ui.cbNoteSupprNomSelect.clear()
+        self.ui.cbNoteModifNomSelect.clear()
+
+        mat=self.ui.cbNoteMatiereSelect.currentText()
+        dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
+            ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
+            ["classes"][self.ui.cbClasseSelect.currentIndex()] \
+            ["eleves"]
+        listNotes = []
+        for eleves in dicoEleves:
+            for ma in eleves["matieres"]:
+                if mat == ma["nom"]:
+                    for note in ma["notes"]:
+                        listNotes.append(note["nom"])
+        listNotesUniques = np.unique(listNotes)
+        self.ui.cbNoteSupprNomSelect.addItems(listNotesUniques)
+        self.ui.cbNoteModifNomSelect.addItems(listNotesUniques)
+        self.majNoteModif()
+        print("majNotes", listNotesUniques)
+    def majNoteModif(self):
+        self.ui.leNoteModifNom.clear()
+        mat = self.ui.cbNoteMatiereSelect.currentText()
+        noteSelect = self.ui.cbNoteModifNomSelect.currentText()
+        dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
+            ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
+            ["classes"][self.ui.cbClasseSelect.currentIndex()] \
+            ["eleves"]
+        self.ui.leNoteModifNom.setText(self.ui.cbNoteModifNomSelect.currentText())
+        coefNoteSelect = None
+        for eleves in dicoEleves:
+            if coefNoteSelect == None:
+                for ma in eleves["matieres"]:
+                    if mat == ma["nom"]:
+                        for note in ma["notes"]:
+                            if note["nom"]== noteSelect:
+                                coefNoteSelect = note["coef"]
+                                self.ui.dsbNoteModifCoeff.setValue(coefNoteSelect)
+                                print("majNotesModif")
+                                break
+                        break
+                break
     def affichageEleves(self):
         cpt= 0
         self.ui.twSaisieNote.clearContents()
-        header = ["Nom", "Prénom", "Note"]
+        header = ["Nom", "Prénom", "Ajout de Notes"]
         self.ui.twSaisieNote.setColumnCount(len(header))     # pour avoir X colonnes
         self.ui.twSaisieNote.setHorizontalHeaderLabels(header)  #pour avoir les titre de colonne
         dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
@@ -93,7 +138,7 @@ class EditeurNote(QWidget):
                             ["eleves"]
         for eleves in dicoEleves:
             for matiere in eleves["matieres"]:
-                mat = self.ui.cbMatiereSelect.currentText()
+                mat = self.ui.cbNoteMatiereSelect.currentText()
                 if matiere["nom"] == mat:
                     nomE = eleves["nom"]
                     prenomE = eleves["prenom"]
@@ -104,10 +149,10 @@ class EditeurNote(QWidget):
                     itemEp = QTableWidgetItem(prenomE)
                     self.ui.twSaisieNote.setItem(cpt, 1, itemEp)
                     spinB = QDoubleSpinBox()
-                    spinB.setProperty("nom", nomE)
+                    spinB.setProperty("nom", nomE)   #lier la dsb au nom d'élève
                     self.ui.twSaisieNote.setCellWidget(cpt, 2, spinB)
                     cpt = cpt+1
-        # print("affichageEleveTWajoutNote")
+        print("affichageEleve")
     def ajoutNote(self):
         dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
             ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
@@ -115,28 +160,216 @@ class EditeurNote(QWidget):
             ["eleves"]
         n = self.ui.twSaisieNote.rowCount()
         for i in range(0, n):
-            mat = self.ui.cbMatiereSelect.currentText()
-            eleveTw = self.ui.twSaisieNote.item(i,0).text()
-            spinB = self.ui.twSaisieNote.cellWidget(i,2)
+            mat = self.ui.cbNoteMatiereSelect.currentText()
+            eleveTw = self.ui.twSaisieNote.item(i, 0).text()
+            spinB = self.ui.twSaisieNote.cellWidget(i, 2)
             noteSb = spinB.value()
-            nomDevoir = self.ui.leDevoirEdit.text()
-            coefDv = self.ui.dsbCoeffDevoir.value()
-            if nomDevoir == '' or coefDv ==0.0:         #bloque l'ajout de devoir sans nom ou sans coef
+            nomDevoir = self.ui.leNoteAjoutNom.text()
+            coefDv = self.ui.dsbAjoutNoteCoeff.value()
+            if nomDevoir == '':  # or coefDv ==0.0:         #bloque l'ajout de devoir sans nom ou sans coef
                 print("stop")
             else:
                 for eleves in dicoEleves:
                     if eleves["nom"] == eleveTw:
                         for matiere in eleves["matieres"]:
-                            if matiere["nom"] == mat :
+                            if matiere["nom"] == mat:
                                 # print(eleves["nom"], matiere["nom"], 'devoir:', nomDevoir, 'coefDv:', coeff, 'note:', noteSb)
                                 ajoutNotes = matiere["notes"]
                                 ajoutNotes.append({"nom": nomDevoir, "coef": coefDv, "valeur": noteSb})
                                 print("Devoir ajouté !", eleves["nom"], matiere["nom"], ajoutNotes)
                                 # self.sauveJSON(filename)
                 # self.ui.twSaisieNote.cellWidget(i, 2).cleanText()
-        self.ui.leDevoirEdit.clear()            #réinitialise le nom du devoir
-        self.ui.dsbCoeffDevoir.setValue(0.0)   #réinitialise le coef du devoir
+        self.ui.leNoteAjoutNom.clear()  # réinitialise le nom du devoir
+        self.ui.dsbAjoutNoteCoeff.setValue(1.0)  # réinitialise le coef du devoir
+        self.ui.twSaisieNote.clear()
+        self.affichageEleves()
+        self.majNote()
+
+    # Notes_________________________________________________________________________
+
+    # MATIERE__________________________________________________________________________
+    # def majMatAca(self):
+    #     self.ui2.BDcbMatAcaSelect.clear()
+    #     listAca = [ac["nom"] for ac in self.dicoJson["academies"]]
+    #     self.ui2.BDcbMatAcaSelect.addItems(listAca)
+    #
+    # def majMatEta(self):
+    #     self.ui2.BDcbMatEtaSelect.clear()
+    #     listEta = [et["nom"] for et in
+    #                self.dicoJson["academies"][self.ui2.BDcbMatAcaSelect.currentIndex()]["etablissements"]]
+    #     self.ui2.BDcbMatEtaSelect.addItems(listEta)
+    #
+    # def majMatCla(self):
+    #     self.ui2.BDcbMatClaSelect.clear()
+    #     listCla = [cl["nom"] for cl in self.dicoJson["academies"][self.ui2.BDcbMatAcaSelect.currentIndex()] \
+    #         ["etablissements"][self.ui2.BDcbMatEtaSelect.currentIndex()]["classes"]]
+    #     self.ui2.BDcbMatClaSelect.addItems(listCla)
+    #
+    # def majMatEle(self):
+    #     self.ui2.BDcbMatEleNoSelect.clear()
+    #     listEleNom = [el["nom"] for el in self.dicoJson["academies"][self.ui2.BDcbMatAcaSelect.currentIndex()] \
+    #         ["etablissements"][self.ui2.BDcbMatEtaSelect.currentIndex()] \
+    #         ["classes"][self.ui2.BDcbMatClaSelect.currentIndex()]["eleves"]]
+    #     listElePrenom = [el["prenom"] for el in self.dicoJson["academies"][self.ui2.BDcbMatAcaSelect.currentIndex()] \
+    #         ["etablissements"][self.ui2.BDcbMatEtaSelect.currentIndex()] \
+    #         ["classes"][self.ui2.BDcbMatClaSelect.currentIndex()]["eleves"]]
+    #     listEle = []
+    #     for i in range(0, len(listEleNom)):
+    #         nl = f"{listEleNom[i]} {listElePrenom[i]}"
+    #         listEle.append(nl)
+    #     self.ui2.BDcbMatEleNoSelect.addItems(listEle)
+    #
+    # def majMat(self):
+    #     self.ui2.BDcbMatModifSelect.clear()
+    #     self.ui2.BDcbMatSupprSelect.clear()
+    #     self.ui2.BDleMatModifApp.clear()
+    #     dicoMat = self.dicoJson["academies"][self.ui2.BDcbMatAcaSelect.currentIndex()] \
+    #         ["etablissements"][self.ui2.BDcbMatEtaSelect.currentIndex()] \
+    #         ["classes"][self.ui2.BDcbMatClaSelect.currentIndex()] \
+    #         ["eleves"][self.ui2.BDcbMatEleNoSelect.currentIndex()]["matieres"]
+    #     listMatNom = [mat["nom"] for mat in dicoMat]
+    #     self.ui2.BDcbMatModifSelect.addItems(listMatNom)
+    #     self.ui2.BDcbMatSupprSelect.addItems(listMatNom)
+    #     self.majMatModif()
+
+    # def majMatModif(self):
+    #     self.ui2.BDdsbMatModifCoef.setValue(0.0)
+    #     self.ui2.BDleMatModifApp.clear()
+    #     self.ui2.BDleMatModifNom.clear()
+    #     dicoMat = self.dicoJson["academies"][self.ui2.BDcbMatAcaSelect.currentIndex()] \
+    #         ["etablissements"][self.ui2.BDcbMatEtaSelect.currentIndex()] \
+    #         ["classes"][self.ui2.BDcbMatClaSelect.currentIndex()] \
+    #         ["eleves"][self.ui2.BDcbMatEleNoSelect.currentIndex()]["matieres"]
+    #     matCoef = dicoMat[self.ui2.BDcbMatModifSelect.currentIndex()]["coef"]
+    #     matApp = dicoMat[self.ui2.BDcbMatModifSelect.currentIndex()]["appreciation"]
+    #     matNom = dicoMat[self.ui2.BDcbMatModifSelect.currentIndex()]["nom"]
+    #     self.ui2.BDdsbMatModifCoef.setValue(matCoef)
+    #     self.ui2.BDleMatModifApp.setText(matApp)
+    #     self.ui2.BDleMatModifNom.setText(matNom)
+
+    def modifNote(self):
+        dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
+            ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
+            ["classes"][self.ui.cbClasseSelect.currentIndex()] \
+            ["eleves"]
+
+        n = self.ui.twSaisieNote.rowCount()
+        for i in range(0, n):
+            mat = self.ui.cbNoteMatiereSelect.currentText()
+            eleveTw = self.ui.twSaisieNote.item(i, 0).text()
+            spinB = self.ui.twSaisieNote.cellWidget(i, 2)
+            noteSb = spinB.value()
+            selectNomDevoir = self.ui.cbNoteModifNomSelect.currentText()
+            newNomDevoir = self.ui.leNoteModifNom.text()
+            newCoefDv = self.ui.dsbNoteModifCoeff.value()
+            if newNomDevoir == '':  # or coefDv ==0.0:         #bloque l'ajout de devoir sans nom ou sans coef
+                print("stop")
+            else:
+                for eleves in dicoEleves:
+                    cptEleve = 0
+                    if eleves["nom"] == eleveTw:
+                        for matiere in eleves["matieres"]:
+                            cptMat = 0
+                            if matiere["nom"] == mat:
+                                for note in matiere["notes"]:
+                                    cptNote = 0
+                                    if note["nom"] == selectNomDevoir:
+                                        dicoModifNote = dicoEleves[cptEleve]["matieres"][cptMat]["notes"][cptNote]
+                                        dicoModifNote["nom"] = newNomDevoir
+                                        dicoModifNote["coef"] = newCoefDv
+                                        dicoModifNote["valeur"] = noteSb
+                                        cptNote += 1
+                                        if dicoModifNote["nom"] == '' or dicoModifNote["coef"] == 0.0:
+                                            print("stop")
+                                        else:
+                                            print("Devoir modifiée !")
+                                            # self.sauveJSON(filename)
+                                            # self.majMatiere()
+                                cptMat +=1
+                        cptEleve +=1
+                # self.ui.twSaisieNote.cellWidget(i, 2).cleanText()
+        self.ui.leNoteAjoutNom.clear()  # réinitialise le nom du devoir
+        self.ui.dsbAjoutNoteCoeff.setValue(1.0)  # réinitialise le coef du devoir
         self.majMatiere()
+
+    # def ajoutMat(self):
+    #     dicoAjoutMat = self.dicoJson["academies"][self.ui2.BDcbMatAcaSelect.currentIndex()] \
+    #         ["etablissements"][self.ui2.BDcbMatEtaSelect.currentIndex()] \
+    #         ["classes"][self.ui2.BDcbMatClaSelect.currentIndex()] \
+    #         ["eleves"][self.ui2.BDcbMatEleNoSelect.currentIndex()] \
+    #         ["matieres"]
+    #
+    #     nomMat = self.ui2.BDleMatAjoutNom.text()
+    #     coefMat = self.ui2.BDdsbMatAjoutCoef.value()
+    #     appMat = self.ui2.BDleMatAjoutApp.text()
+    #     if nomMat == '' or coefMat == 0.0:
+    #         print("stop")
+    #     else:
+    #         dicoAjoutMat.append({"nom": nomMat, "coef": coefMat, "appreciation": appMat, "notes": []})
+    #         print("Matière ajoutée !")
+    #         # self.sauveJSON(filename)
+    #         self.majMat()
+    #         self.ui2.BDleMatAjoutNom.clear()
+    #         self.ui2.BDdsbMatAjoutCoef.setValue(1.0)
+    #         self.ui2.BDleMatAjoutApp.clear()
+
+    def supprNote(self):
+        dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
+            ["etablissements"][self.ui.cbEtablissementSelect.currentIndex()] \
+            ["classes"][self.ui.cbClasseSelect.currentIndex()] \
+            ["eleves"]
+
+        n = self.ui.twSaisieNote.rowCount()
+        for i in range(0, n):
+            mat = self.ui.cbNoteMatiereSelect.currentText()
+            eleveTw = self.ui.twSaisieNote.item(i, 0).text()
+            selectNomDevoir = self.ui.cbNoteSupprNomSelect.currentText()
+            if nomDevoir == '':  # or coefDv ==0.0:         #bloque l'ajout de devoir sans nom ou sans coef
+                print("stop")
+            else:
+                for eleves in dicoEleves:
+                    cptEleve = 0
+                    if eleves["nom"] == eleveTw:
+                        for matiere in eleves["matieres"]:
+                            cptNote = 0
+                            if matiere["nom"] == mat:
+                                for note in matiere["nom"]:
+                                    if note["nom"] == selectNomDevoir:
+                                        dicoModifNote = dicoEleves[cptEleve]["notes"][cptNote]
+                                        dicoModifNote.pop(self.ui.cbNoteSupprNomSelect.currentIndex())
+                                        print("Matière supprimée !")
+                                        # self.sauveJSON(filename)
+        self.majMatiere()
+
+    def confirmSupprNote(self):
+        print("confirm suppr")
+        msgSuppr = QMessageBox()
+        msgSuppr.setWindowTitle("Suppression")
+        msgSuppr.setText("Confirmer la suppression du devoir: {}".format(self.ui.cbNoteSupprNomSelect.currentText()))
+        msgSuppr.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        buttonY = msgSuppr.button(QMessageBox.Yes)
+        buttonN = msgSuppr.button(QMessageBox.No)
+        msgSuppr.exec()
+        if msgSuppr.clickedButton() == buttonY:
+            self.supprNote()
+        elif msgSuppr.clickedButton() == buttonN:
+            pass
+
+    def confirmModifNote(self):
+        print("confirm modif")
+        msgModif = QMessageBox()
+        msgModif.setWindowTitle("Modification")
+        msgModif.setText(
+            "Confirmer la modification du devoir: {}".format(self.ui.cbNoteModifNomSelect.currentText()))
+        msgModif.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        buttonY = msgModif.button(QMessageBox.Yes)
+        buttonN = msgModif.button(QMessageBox.No)
+        msgModif.exec()
+        if msgModif.clickedButton() == buttonY:
+            self.modifNote()
+        elif msgModif.clickedButton() == buttonN:
+            pass
+
     def majAffichageMoyenne (self): #, classe, eleveNom, elevePrenom, moyEleve, moyClasse):
 
         dicoEleves = self.dicoJson["academies"][self.ui.cbAcademieSelect.currentIndex()] \
@@ -201,11 +434,11 @@ class EditeurNote(QWidget):
                     cptCol=2
                     # print('pass', matiere["nom"], "notes", matiere["notes"])
             cptRow += 1
-        # print("affichageEleveTWradar")
+        print("affichageMoyenneEleve")
     def lireJSON(self,fileName):
         with open(fileName) as json_file:
-            dico = json.load(json_file)
-            return dico
+            self.dicoJson = json.load(json_file)
+            return self.dicoJson
         return None
     def sauveJSON(self, fileName):
         jsonClasse = json.dumps(self.dicoJson, sort_keys=True, indent=2)
@@ -281,11 +514,11 @@ class EditeurNote(QWidget):
             moyenneClasseR = np.concatenate((listMoyC, [listMoyC[0]]))
             angles = np.concatenate((angles, [angles[0]]))
 
-            self.fig = plt.figure(figsize=(4,4))
+            self.fig = plt.figure()
             ax = self.fig.add_subplot(111, polar=True)
-            ax.plot(angles, moyenneEleveR, 'o-', linewidth=2,label="Moyenne de l'élève")
+            ax.plot(angles, moyenneEleveR, 'o-', linewidth=2,label="Elève")
             ax.fill(angles, moyenneEleveR, alpha=0.2)
-            ax.plot(angles, moyenneClasseR, 'o-', linewidth=2, label="Moyenne de la classe")
+            ax.plot(angles, moyenneClasseR, 'o-', linewidth=2, label="Classe")
             ax.fill(angles, moyenneClasseR, alpha=0.2)
             ax.set_thetagrids(angles * 180 / np.pi, labels)
             plt.yticks([2, 4, 6, 8, 10, 12, 14, 16, 18], color="grey", size=7)
@@ -304,17 +537,25 @@ class EditeurNote(QWidget):
         self.gestionBd = GestionBd() #Lance la deuxième fenêtre
         # la deuxième fenêtre sera 'modale' (la première fenêtre sera inactive)
         self.gestionBd.setWindowModality(QtCore.Qt.ApplicationModal)
+        #connection au signal upd envoyé par gestionBd qui lance la fonction updateEditeur
+        self.gestionBd.upd.connect(self.updateEditeur)
         # appel de la deuxième fenêtre
         self.gestionBd.show()
+    def updateEditeur(self):
+        print("update")
+        self.lireJSON(filename)
+        self.majAcademies()
+        self.majAffichageMoyenne()
 
 class GestionBd(QWidget):
+    upd=Signal()
     def __init__(self):
         super(GestionBd, self).__init__()
-        self.setWindowTitle(u"Gestion base de donnée")
+        self.setWindowTitle("Gestion base de donnée")
         global filename
         self.dicoJson = {}
         self.dicoJson = self.lireJSON(filename)
-        self.ui2 = Ui_Form_W2()
+        self.ui2 = Ui_Gestion_DB()
         self.ui2.setupUi(self)
 # MATIERE__________________________________________________________________________
         self.ui2.BDcbMatAcaSelect.currentIndexChanged.connect(self.majMatEta)
@@ -601,10 +842,9 @@ class GestionBd(QWidget):
         buttonC = msgExit.button(QMessageBox.Cancel)
         msgExit.exec()
         if msgExit.clickedButton() == buttonS:
-            editeurNote = EditeurNote()
-            editeurNote.update()
             print("save")
             # self.sauveJSON(filename)
+            self.upd.emit()
             event.accept()
         elif msgExit.clickedButton() == buttonD:
             print("discard")
@@ -612,6 +852,7 @@ class GestionBd(QWidget):
         elif msgExit.clickedButton() == buttonC:
             print("cancel")
             event.ignore()
+
 # JSON__________________________________________________________________________
     def lireJSON(self,fileName):
         with open(fileName) as json_file:

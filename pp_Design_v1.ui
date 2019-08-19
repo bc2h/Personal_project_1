@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Editeur_de_Notes</class>
+ <widget class="QWidget" name="Editeur_de_Notes">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -242,7 +242,21 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
-         <layout class="QVBoxLayout" name="qRadar"/>
+         <layout class="QVBoxLayout" name="qRadar">
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </item>
         <item>
          <spacer name="verticalSpacer_6">
@@ -332,16 +346,6 @@
       <attribute name="title">
        <string>Saisie des Notes</string>
       </attribute>
-      <widget class="QTableWidget" name="twSaisieNote">
-       <property name="geometry">
-        <rect>
-         <x>380</x>
-         <y>40</y>
-         <width>771</width>
-         <height>601</height>
-        </rect>
-       </property>
-      </widget>
       <widget class="QWidget" name="verticalLayoutWidget_5">
        <property name="geometry">
         <rect>
@@ -353,7 +357,46 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_10">
         <item>
+         <widget class="QLabel" name="label_18">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Sélection de la Matière</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="label_7">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>130</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Matière *</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cbNoteMatiereSelect"/>
+            </item>
+           </layout>
+          </item>
           <item>
            <spacer name="verticalSpacer_2">
             <property name="orientation">
@@ -373,41 +416,32 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
-             <widget class="QLabel" name="label_17">
-              <property name="font">
-               <font>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Ajout devoir</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
               <item>
-               <widget class="QLabel" name="label_7">
+               <widget class="QCheckBox" name="checkbAjoutDevoir">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>130</width>
-                  <height>0</height>
-                 </size>
-                </property>
                 <property name="text">
-                 <string>Matière *</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="cbMatiereSelect"/>
+               <widget class="QLabel" name="label_17">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Ajout devoir</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -436,7 +470,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="leDevoirEdit"/>
+               <widget class="QLineEdit" name="leNoteAjoutNom"/>
               </item>
              </layout>
             </item>
@@ -462,7 +496,11 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="dsbCoeffDevoir"/>
+               <widget class="QDoubleSpinBox" name="dsbAjoutNoteCoeff">
+                <property name="value">
+                 <double>1.000000000000000</double>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -491,41 +529,32 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
-             <widget class="QLabel" name="label_22">
-              <property name="font">
-               <font>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Modification devoir</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_13">
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
               <item>
-               <widget class="QLabel" name="label_20">
+               <widget class="QCheckBox" name="checkbModifDevoir">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>130</width>
-                  <height>0</height>
-                 </size>
-                </property>
                 <property name="text">
-                 <string>Matière *</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="cbMatiereSelect_4"/>
+               <widget class="QLabel" name="label_22">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Modification devoir</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -554,7 +583,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="cbMatiereSelect_5"/>
+               <widget class="QComboBox" name="cbNoteModifNomSelect"/>
               </item>
              </layout>
             </item>
@@ -583,7 +612,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="leDevoirEdit_3"/>
+               <widget class="QLineEdit" name="leNoteModifNom"/>
               </item>
              </layout>
             </item>
@@ -603,12 +632,16 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="dsbCoeffDevoir_3"/>
+               <widget class="QDoubleSpinBox" name="dsbNoteModifCoeff">
+                <property name="value">
+                 <double>1.000000000000000</double>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
             <item>
-             <widget class="QPushButton" name="pbMatiereSuppr_3">
+             <widget class="QPushButton" name="pbNoteModif">
               <property name="text">
                <string>Modification</string>
               </property>
@@ -632,41 +665,32 @@
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
-             <widget class="QLabel" name="label_10">
-              <property name="font">
-               <font>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Suppression devoir</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_17">
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
               <item>
-               <widget class="QLabel" name="label_24">
+               <widget class="QCheckBox" name="checkbSupprDevoir">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>130</width>
-                  <height>0</height>
-                 </size>
-                </property>
                 <property name="text">
-                 <string>Matière *</string>
+                 <string/>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="cbMatiereSelectSuppr"/>
+               <widget class="QLabel" name="label_10">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Suppression devoir</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -695,12 +719,12 @@
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="cbMatiereSelectDevoirSuppr"/>
+               <widget class="QComboBox" name="cbNoteSupprNomSelect"/>
               </item>
              </layout>
             </item>
             <item>
-             <widget class="QPushButton" name="pbDevoirSuppr">
+             <widget class="QPushButton" name="pbNoteSuppr">
               <property name="text">
                <string>Suppression</string>
               </property>
@@ -731,6 +755,39 @@
          </widget>
         </item>
        </layout>
+      </widget>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="geometry">
+        <rect>
+         <x>370</x>
+         <y>20</y>
+         <width>781</width>
+         <height>631</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string>GroupBox</string>
+       </property>
+       <widget class="QTableWidget" name="twSaisieNote">
+        <property name="geometry">
+         <rect>
+          <x>490</x>
+          <y>60</y>
+          <width>281</width>
+          <height>561</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="twAffichageNote">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>60</y>
+          <width>461</width>
+          <height>561</height>
+         </rect>
+        </property>
+       </widget>
       </widget>
      </widget>
     </widget>
